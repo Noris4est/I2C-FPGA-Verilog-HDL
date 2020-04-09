@@ -1,7 +1,7 @@
 module I2C_FPGA_MASTER
 	#(
 	parameter 							BIT_PER_SECOND=100000,
-	parameter 							CLOCK_FREQUENCY=800000,
+	parameter 							CLOCK_FREQUENCY=50000000,
 	parameter 							CLKS_PER_BIT_LOG_2=$clog2(CLOCK_FREQUENCY/BIT_PER_SECOND)
 	)
 	(input 								IN_CLOCK,
@@ -290,7 +290,7 @@ module I2C_FPGA_MASTER
 			STATE_WRITE_ACK:
 			begin
 				REG_SDA_IO_STATE=OUTPUT;
-				REG_SDA_DATA=(REG_NUMBER_WR_BYTES==0)?1:0;//ACK bit
+				REG_SDA_DATA=0;//ACK bit
 				if (REG_CLOCK_COUNT<CLKS_PER_BIT-1)
 				begin
 					REG_CLOCK_COUNT<=REG_CLOCK_COUNT+1'b1;
@@ -324,7 +324,7 @@ module I2C_FPGA_MASTER
 				if (REG_CLOCK_COUNT<CLKS_PER_BIT)
 				begin
 					REG_CLOCK_COUNT<=REG_CLOCK_COUNT+1'b1;
-					if(REG_CLOCK_COUNT==CLKS_PER_BIT*1/2)
+					if(REG_CLOCK_COUNT==CLKS_PER_BIT*7/8)
 						REG_SCL_DATA=!REG_SCL_DATA;
 				end
 				else
